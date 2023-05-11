@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script defer>
+        const ws = new WebSocket("ws://localhost:8080")
+
+        ws.addEventListener("open", () => {
+            const btn = document.querySelector("button")
+            btn.onclick = () => {
+                ws.send("INCREASE")
+                ws.send("PING")
+            }
+
+            ws.addEventListener("message", (m) => {
+                document.querySelector("span#clicks").innerText = m.data
+            })
+        })
+    </script>
+</head>
+<body>
+    <h1>
+        asd
+    </h1>
+    <button>
+        Click
+    </button>
+    <span id="clicks">...</span>
+</body>
+</html>
