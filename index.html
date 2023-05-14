@@ -7,18 +7,21 @@
     <title>Document</title>
     <script defer>
         const ws = new WebSocket("ws://localhost:8080")
-
+        let token = ""
         ws.addEventListener("open", () => {
             const clickBtn = document.querySelectorAll("button")[0]
             clickBtn.onclick = () => {
                 ws.send("INCREASE")
                 ws.send("PING")
-                console.log("pingPackage")
             }
 
-            const moveRight = document.querySelectorAll("button")[1]
+            const moveRight = document.querySelector("#right")
             moveRight.onclick = () => {
-                ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, 10`)
+                ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, 10, ${token}`)
+            } 
+            const moveLeft = document.querySelector("#left")
+            moveLeft.onclick = () => {
+                ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, -10, ${token}`)
             } 
 
             ws.addEventListener("message", (m) => {
@@ -41,7 +44,6 @@
                         newPlayer.style["left"] = "0px"
                         newPlayer.innerText = `${formatted[0]}`
                         document.body.append(newPlayer)
-                        console.log("Created player")
                     }
                 } else if (m.data.startsWith("resetPlayerPkg")) {
                     document.querySelectorAll(".player").forEach(el => el.remove())
@@ -57,6 +59,11 @@
                     let formatted = m.data.replace("controllerID: ", "")
 
                     sessionStorage.setItem("controller", formatted)
+                } else if (m.data.startsWith("token: ")) {
+                    let formatted = m.data.replace("token: ", "")
+
+                    token = formatted
+                    console.log(token)
                 }
             })
         })
@@ -75,8 +82,11 @@
     <button id="click-btn">
         Click
     </button>
-    <button id="move">
-        Move
+    <button id="left">
+        <-
+    </button>
+    <button id="right">
+        ->
     </button>
     <span id="clicks">...</span>
 </body>
