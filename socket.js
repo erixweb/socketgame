@@ -19,7 +19,7 @@ const spawnPlayers = () => {
             c.send(`controllerID: ${i}`)
             i++
         })
-        client.send(`createPlayerPkg: Player, 55, ${i}`)
+        client.send(`createPlayerPkg: Player, 70, ${i}`)
     })
 }
 wss.on("connection", ws => {
@@ -28,28 +28,21 @@ wss.on("connection", ws => {
     })
     spawnPlayers()
     ws.on("message", async (data) => {
-        if (data == "INCREASE") {
-            await fs.readFile("list.txt", "utf-8", (err, res) => {
-                fs.writeFileSync("list.txt", `${(parseInt(res)+1).toString()}`)
-
-                wss.clients.forEach((client) => {
-                    client.send(`increaseClicksPkg: ${res}`)
-                })
-            })
-        } else if (data == "PING") {
-            await fs.readFile("list.txt", "utf-8", (err, res) => {
-                ws.send(`increaseClicksPkg: ${res}`)
-            })
-        } else if (data.toString().startsWith("movePlayerPkg: ")) {
-            console.log(Players)
+        if (data.toString().startsWith("movePlayerPkg: ")) {
             let formatted = data.toString().replace("movePlayerPkg: ", "")
 
             formatted = formatted.split(",")
             const playerID = formatted[0]
-            const playerMovement = formatted[1]
+            const playerMovement = parseInt(formatted[1])
             const token = formatted[2]
+            let pos = parseInt(formatted[3].replace("calc", "").replace("(", "").replace(")", "").replace("px", ""))
 
-            if (parseInt(playerMovement) < 11 && parseInt(playerMovement) > -11) {
+            if (playerMovement < 11 && playerMovement > -11) {
+                if (playerMovement > 0 && pos > 640) {
+                    return
+                } else if (playerMovement < 0 && pos < 0) {
+                    return
+                }
                 if (Players[playerID] == token) {
                     wss.clients.forEach((client) => {
                         client.send(`movePlayerPkg: ${playerID}, ${playerMovement}`)

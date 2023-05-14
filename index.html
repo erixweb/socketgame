@@ -8,27 +8,37 @@
     <script defer>
         const ws = new WebSocket("ws://localhost:8080")
         let token = ""
+        let keyPressed = []
         ws.addEventListener("open", () => {
-            const clickBtn = document.querySelectorAll("button")[0]
-            clickBtn.onclick = () => {
-                ws.send("INCREASE")
-                ws.send("PING")
+            function update () {
+                if (keyPressed["rightPressed"] == true) {
+                    ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, 5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
+                    console.log("Sending movePlayerPkg")
+                } else if (keyPressed["leftPressed"] == true) {
+                    ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, -5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
+                    console.log("Sending movePlayerPkg")
+                }
+                window.requestAnimationFrame(update)
             }
+            update()
 
             const moveRight = document.querySelector("#right")
-            moveRight.onclick = () => {
-                ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, 10, ${token}`)
+            moveRight.onpointerdown = () => {
+                keyPressed["rightPressed"] = true
+            }
+            moveRight.onpointerup = () => {
+                keyPressed["rightPressed"] = false
             } 
             const moveLeft = document.querySelector("#left")
-            moveLeft.onclick = () => {
-                ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, -10, ${token}`)
-            } 
+            moveLeft.onpointerdown = () => {
+                keyPressed["leftPressed"] = true
+            }
+            moveLeft.onpointerup = () => {
+                keyPressed["leftPressed"] = false
+            }
 
             ws.addEventListener("message", (m) => {
-                if (m.data.startsWith("increaseClicksPkg: ")) {
-                    let formatted = m.data.replace("increaseClicksPkg: ", "")
-                    document.querySelector("span#clicks").innerText = formatted
-                } else if (m.data.startsWith("createPlayerPkg: ")) {
+                if (m.data.startsWith("createPlayerPkg: ")) {
                     let formatted = m.data.replace("createPlayerPkg: ", "")
 
                     formatted = formatted.split(",")
@@ -43,7 +53,7 @@
                         newPlayer.style["backgroundColor"] = "red"
                         newPlayer.style["left"] = "0px"
                         newPlayer.innerText = `${formatted[0]}`
-                        document.body.append(newPlayer)
+                        document.querySelector("main").append(newPlayer)
                     }
                 } else if (m.data.startsWith("resetPlayerPkg")) {
                     document.querySelectorAll(".player").forEach(el => el.remove())
@@ -68,6 +78,7 @@
             })
         })
     </script>
+    <link rel="stylesheet" href="styles.css">
     <style>
         .player {
             position: absolute;
@@ -76,18 +87,15 @@
     </style>
 </head>
 <body>
-    <h1>
-        Socket Test
-    </h1>
-    <button id="click-btn">
-        Click
-    </button>
-    <button id="left">
-        <-
-    </button>
-    <button id="right">
-        ->
-    </button>
-    <span id="clicks">...</span>
+    <main>
+        <div class="controlls">
+            <button id="left">
+                <=
+            </button>
+            <button id="right">
+                =>
+            </button>
+        </div>
+    </main>
 </body>
 </html>
