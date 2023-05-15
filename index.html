@@ -5,83 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script defer>
-        const ws = new WebSocket("ws://localhost:8080")
-        let token = ""
-        let keyPressed = []
-        ws.addEventListener("open", () => {
-            function update () {
-                if (keyPressed["rightPressed"] == true) {
-                    ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, 5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
-                    console.log("Sending movePlayerPkg")
-                } else if (keyPressed["leftPressed"] == true) {
-                    ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, -5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
-                    console.log("Sending movePlayerPkg")
-                }
-                window.requestAnimationFrame(update)
-            }
-            update()
-
-            const moveRight = document.querySelector("#right")
-            moveRight.onpointerdown = () => {
-                keyPressed["rightPressed"] = true
-            }
-            moveRight.onpointerup = () => {
-                keyPressed["rightPressed"] = false
-            } 
-            const moveLeft = document.querySelector("#left")
-            moveLeft.onpointerdown = () => {
-                keyPressed["leftPressed"] = true
-            }
-            moveLeft.onpointerup = () => {
-                keyPressed["leftPressed"] = false
-            }
-            document.onpointerup = () => {
-                keyPressed["leftPressed"] = false
-                keyPressed["rightPressed"] = false
-            }
-
-            ws.addEventListener("message", (m) => {
-                if (m.data.startsWith("createPlayerPkg: ")) {
-                    let formatted = m.data.replace("createPlayerPkg: ", "")
-
-                    formatted = formatted.split(",")
-
-                    for (let i = 0; parseInt(formatted[2]) > i; i++) {
-                        let newPlayer = document.createElement("div")
-
-                        newPlayer.className = "player"
-                        newPlayer.id = i.toString()
-                        newPlayer.style["width"] = `${formatted[1]}px`
-                        newPlayer.style["height"] = `${formatted[1]}px`
-                        newPlayer.style["backgroundColor"] = "red"
-                        newPlayer.style["left"] = "0px"
-                        newPlayer.innerText = `${formatted[0]}`
-                        document.querySelector("main").append(newPlayer)
-                    }
-                } else if (m.data.startsWith("resetPlayerPkg")) {
-                    document.querySelectorAll(".player").forEach(el => el.remove())
-                } else if (m.data.startsWith("movePlayerPkg: ")) {
-                    let pkgFormat = m.data.replace("movePlayerPkg: ", "")
-                    pkgFormat = pkgFormat.split(",")
-
-                    pkgFormat["playerID"] = pkgFormat[0]
-                    pkgFormat["playerMovement"] = pkgFormat[1]
-                    let currentPos = document.querySelectorAll(`.player`)[pkgFormat["playerID"]].style.left
-                    document.querySelectorAll(`.player`)[pkgFormat["playerID"]].style.left = `calc(${currentPos} + ${pkgFormat["playerMovement"]}px)`
-                } else if (m.data.startsWith("controllerID: ")) {
-                    let formatted = m.data.replace("controllerID: ", "")
-
-                    sessionStorage.setItem("controller", formatted)
-                } else if (m.data.startsWith("token: ")) {
-                    let formatted = m.data.replace("token: ", "")
-
-                    token = formatted
-                    console.log(token)
-                }
-            })
-        })
-    </script>
+    <script src="/client/main.js" defer></script>
     <link rel="stylesheet" href="styles.css">
     <style>
         .player {
@@ -93,10 +17,18 @@
 <body>
     <main>
         <div class="controlls">
-            <button id="left">
-                <=
+            <button id="up">
+                =>
             </button>
-            <button id="right">
+            <div class="row">
+                <button id="left">
+                    <=
+                </button>
+                <button id="right">
+                    =>
+                </button>
+            </div>
+            <button id="down">
                 =>
             </button>
         </div>
