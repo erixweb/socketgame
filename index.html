@@ -36,6 +36,10 @@
             moveLeft.onpointerup = () => {
                 keyPressed["leftPressed"] = false
             }
+            document.onpointerup = () => {
+                keyPressed["leftPressed"] = false
+                keyPressed["rightPressed"] = false
+            }
 
             ws.addEventListener("message", (m) => {
                 if (m.data.startsWith("createPlayerPkg: ")) {
