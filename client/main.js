@@ -10,8 +10,10 @@ ws.addEventListener("open", () => {
             scroll(window.scrollX - 3, 0)
             ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, -5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
         } else if (keyPressed["downPressed"]) {
+            scroll(window.scrollX, window.scrollY + 3)
             ws.send(`verticalMovementPkg: ${sessionStorage.getItem("controller")}, -5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.top}`)
         } else if (keyPressed["upPressed"]) {
+            scroll(window.scrollX, window.scrollY - 3)
             ws.send(`verticalMovementPkg: ${sessionStorage.getItem("controller")}, 5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.top}`)
         }
         window.requestAnimationFrame(update)
