@@ -18,10 +18,9 @@ body {
 main {
     padding: 30px;
     border-radius: 7px;
-    background-color: #000;
-    width: 100%;
-    max-width: 700px;
-    height: 700px;
+    background: url(https://opengameart.org/sites/default/files/Dirt_01.png);
+    width: 2000px;
+    height: 2000px;
     position: relative;
     overflow: none;
     z-index: 999;
@@ -38,7 +37,7 @@ main {
 }
 .controlls {
     text-align: center;
-    position: absolute;
+    position: fixed;
     bottom: 20px;
     left: 20px;
     z-index: 9999;

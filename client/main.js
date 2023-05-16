@@ -4,8 +4,10 @@ let keyPressed = []
 ws.addEventListener("open", () => {
     function update() {
         if (keyPressed["rightPressed"] == true) {
+            scroll(window.scrollX + 3, 0)
             ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, 5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
         } else if (keyPressed["leftPressed"] == true) {
+            scroll(window.scrollX - 3, 0)
             ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, -5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
         } else if (keyPressed["downPressed"]) {
             ws.send(`verticalMovementPkg: ${sessionStorage.getItem("controller")}, -5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.top}`)

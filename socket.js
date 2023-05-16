@@ -38,7 +38,7 @@ wss.on("connection", ws => {
             let pos = parseInt(formatted[3].replace("calc", "").replace("(", "").replace(")", "").replace("px", ""))
 
             if (playerMovement < 6 && playerMovement > -6) {
-                if (playerMovement > 0 && pos > 640) {
+                if (playerMovement > 0 && pos > 1990) {
                     return
                 } else if (playerMovement < 0 && pos < 0) {
                     return
