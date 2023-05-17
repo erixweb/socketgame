@@ -2,12 +2,13 @@ const ws = new WebSocket("ws://localhost:8080")
 let token = ""
 let keyPressed = []
 ws.addEventListener("open", () => {
+    scroll(0, 0)
     function update() {
         if (keyPressed["rightPressed"] == true) {
-            scroll(window.scrollX + 3, 0)
+            scroll(window.scrollX + 3, window.scrollY)
             ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, 5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
         } else if (keyPressed["leftPressed"] == true) {
-            scroll(window.scrollX - 3, 0)
+            scroll(window.scrollX - 3, window.scrollY)
             ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, -5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
         } else if (keyPressed["downPressed"]) {
             scroll(window.scrollX, window.scrollY + 3)
@@ -69,7 +70,6 @@ ws.addEventListener("open", () => {
                 newPlayer.id = i.toString()
                 newPlayer.style["width"] = `${formatted[1]}px`
                 newPlayer.style["height"] = `${formatted[1]}px`
-                newPlayer.style["backgroundColor"] = "red"
                 newPlayer.style["left"] = "10px"
                 newPlayer.style["top"] = "10px"
                 newPlayer.innerText = `${formatted[0]}`
@@ -84,7 +84,7 @@ ws.addEventListener("open", () => {
             pkgFormat["playerID"] = pkgFormat[0]
             pkgFormat["playerMovement"] = pkgFormat[1]
             let currentPos = document.querySelectorAll(`.player`)[pkgFormat["playerID"]].style.left
-            document.querySelectorAll(`.player`)[pkgFormat["playerID"]].style.left = `calc(${currentPos} + ${pkgFormat["playerMovement"]}px)`
+            document.querySelectorAll(`.player`)[pkgFormat["playerID"]].style.left = `calc(${currentPos} +${pkgFormat["playerMovement"]}px)`
         } else if (m.data.startsWith("controllerID: ")) {
             let formatted = m.data.replace("controllerID: ", "")
 
@@ -93,7 +93,6 @@ ws.addEventListener("open", () => {
             let formatted = m.data.replace("token: ", "")
 
             token = formatted
-            console.log(token)
         } else if (m.data.startsWith("verticalMovementPkg: ")) {
             let pkgFormat = m.data.replace("verticalMovementPkg: ", "")
             pkgFormat = pkgFormat.split(",")

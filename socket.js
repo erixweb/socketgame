@@ -19,7 +19,7 @@ const spawnPlayers = () => {
             c.send(`controllerID: ${i}`)
             i++
         })
-        client.send(`createPlayerPkg: Player, 70, ${i}`)
+        client.send(`createPlayerPkg: Player, 90, ${i}`)
     })
 }
 wss.on("connection", ws => {
@@ -38,9 +38,9 @@ wss.on("connection", ws => {
             let pos = parseInt(formatted[3].replace("calc", "").replace("(", "").replace(")", "").replace("px", ""))
 
             if (playerMovement < 6 && playerMovement > -6) {
-                if (playerMovement > 0 && pos > 1990) {
+                if (playerMovement > 0 && pos > 1920) {
                     return
-                } else if (playerMovement < 0 && pos < 0) {
+                } else if (playerMovement < 0 && pos < 5) {
                     return
                 }
                 if (Players[playerID] == token) {
@@ -61,13 +61,10 @@ wss.on("connection", ws => {
             const playerMovement = parseInt(formatted[1])
             const token = formatted[2]
             let pos = parseInt(formatted[3].replace("calc", "").replace("(", "").replace(")", "").replace("px", ""))
-            console.log(`${playerMovement}: ${pos}`)
             if (playerMovement < 6 && playerMovement > -6) {
-                if (playerMovement > 0 && pos < 0) {
-                    console.log("#1")
+                if (playerMovement > 0 && pos < 10) {
                     return
-                } else if (playerMovement < 0 && pos > 640) {
-                    console.log(`${playerMovement}: ${pos}`)
+                } else if (playerMovement < 0 && pos > 1900) {
                     return
                 }
                 if (Players[playerID] == token) {
