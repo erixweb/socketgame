@@ -1,4 +1,5 @@
 const ws = new WebSocket("ws://localhost:8080")
+const overflow = document.getElementById("canvas")
 let token = ""
 let keyPressed = []
 ws.addEventListener("open", () => {
@@ -7,13 +8,16 @@ ws.addEventListener("open", () => {
         if (keyPressed["rightPressed"] == true) {
             scroll(window.scrollX + 3, window.scrollY)
             ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, 5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
-        } else if (keyPressed["leftPressed"] == true) {
+        } 
+        if (keyPressed["leftPressed"] == true) {
             scroll(window.scrollX - 3, window.scrollY)
             ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, -5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
-        } else if (keyPressed["downPressed"]) {
+        }
+        if (keyPressed["downPressed"]) {
             scroll(window.scrollX, window.scrollY + 3)
             ws.send(`verticalMovementPkg: ${sessionStorage.getItem("controller")}, -5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.top}`)
-        } else if (keyPressed["upPressed"]) {
+        }
+        if (keyPressed["upPressed"]) {
             scroll(window.scrollX, window.scrollY - 3)
             ws.send(`verticalMovementPkg: ${sessionStorage.getItem("controller")}, 5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.top}`)
         }
@@ -26,36 +30,28 @@ ws.addEventListener("open", () => {
     const moveDown = document.querySelector("#down")
     const moveUp = document.querySelector("#up")
 
-    moveRight.onpointerdown = () => {
-        keyPressed["rightPressed"] = true
-    }
-    moveRight.onpointerup = () => {
-        keyPressed["rightPressed"] = false
-    }
-    moveLeft.onpointerdown = () => {
-        keyPressed["leftPressed"] = true
-    }
-    moveLeft.onpointerup = () => {
-        keyPressed["leftPressed"] = false
-    }
-    moveDown.onpointerdown = () => {
-        keyPressed["downPressed"] = true
-    }
-    moveDown.onpointerup = () => {
-        keyPressed["downPressed"] = false
-    }
-    moveUp.onpointerdown = () => {
-        keyPressed["upPressed"] = true
-    }
-    moveUp.onpointerup = () => {
-        keyPressed["upPressed"] = false
-    }
-    document.onpointerup = () => {
-        keyPressed["leftPressed"] = false
-        keyPressed["rightPressed"] = false
-        keyPressed["downPressed"] = false
-        keyPressed["upPressed"] = false
-    }
+    document.addEventListener("keydown", (e) => {
+        if (e.key == "w") {
+            keyPressed["upPressed"] = true
+        } else if (e.key == "s") {
+            keyPressed["downPressed"] = true
+        } else if (e.key == "d") {
+            keyPressed["rightPressed"] = true
+        } else if (e.key == "a") {
+            keyPressed["leftPressed"] = true
+        }
+    })
+    document.addEventListener("keyup", (e) => {
+        if (e.key == "w") {
+            keyPressed["upPressed"] = false
+        } else if (e.key == "s") {
+            keyPressed["downPressed"] = false
+        } else if (e.key == "d") {
+            keyPressed["rightPressed"] = false
+        } else if (e.key == "a") {
+            keyPressed["leftPressed"] = false
+        }
+    })
 
     ws.addEventListener("message", (m) => {
         if (m.data.startsWith("createPlayerPkg: ")) {
