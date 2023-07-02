@@ -1,4 +1,4 @@
-export default function movePacketEvent() {
+export default function movePacketEvent(data, Players, wss) {
     let formatted = data.toString().replace("movePlayerPkg: ", "")
 
     formatted = formatted.split(",")
@@ -7,7 +7,7 @@ export default function movePacketEvent() {
     const token = formatted[2]
     let pos = parseInt(formatted[3].replace("calc", "").replace("(", "").replace(")", "").replace("px", ""))
 
-    if (playerMovement < 6 && playerMovement > -6) {
+    if (playerMovement < 8 && playerMovement > -8) {
         if (playerMovement > 0 && pos > 1920) {
             return
         } else if (playerMovement < 0 && pos < 5) {

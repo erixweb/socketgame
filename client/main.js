@@ -7,19 +7,19 @@ ws.addEventListener("open", () => {
     function update() {
         if (keyPressed["rightPressed"] == true) {
             scroll(window.scrollX + 3, window.scrollY)
-            ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, 5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
+            ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, 7, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
         } 
         if (keyPressed["leftPressed"] == true) {
             scroll(window.scrollX - 3, window.scrollY)
-            ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, -5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
+            ws.send(`movePlayerPkg: ${sessionStorage.getItem("controller")}, -7, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.left}`)
         }
         if (keyPressed["downPressed"]) {
             scroll(window.scrollX, window.scrollY + 3)
-            ws.send(`verticalMovementPkg: ${sessionStorage.getItem("controller")}, -5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.top}`)
+            ws.send(`verticalMovementPkg: ${sessionStorage.getItem("controller")}, -7, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.top}`)
         }
         if (keyPressed["upPressed"]) {
             scroll(window.scrollX, window.scrollY - 3)
-            ws.send(`verticalMovementPkg: ${sessionStorage.getItem("controller")}, 5, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.top}`)
+            ws.send(`verticalMovementPkg: ${sessionStorage.getItem("controller")}, 7, ${token}, ${document.querySelectorAll(".player")[parseInt(sessionStorage.getItem("controller"))].style.top}`)
         }
         window.requestAnimationFrame(update)
     }

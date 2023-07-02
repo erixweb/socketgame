@@ -1,4 +1,4 @@
-export default function verticalMovementPacket() {
+export default function verticalMovementPacket(data, Players, wss) {
     let formatted = data.toString().replace("verticalMovementPkg: ", "")
     formatted = formatted.split(",")
 
@@ -6,7 +6,7 @@ export default function verticalMovementPacket() {
     const playerMovement = parseInt(formatted[1])
     const token = formatted[2]
     let pos = parseInt(formatted[3].replace("calc", "").replace("(", "").replace(")", "").replace("px", ""))
-    if (playerMovement < 6 && playerMovement > -6) {
+    if (playerMovement < 8 && playerMovement > -8) {
         if (playerMovement > 0 && pos < 10) {
             return
         } else if (playerMovement < 0 && pos > 1900) {
@@ -22,4 +22,4 @@ export default function verticalMovementPacket() {
     } else {
         console.log(`${playerID} moved wrongly ${playerMovement}`)
     }
-}
+}   

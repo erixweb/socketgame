@@ -1,11 +1,15 @@
-const WebSocket = require("ws")
-const fs = require("fs")
-const { default: movePacketEvent } = require("./packets/movePacket")
-const { default: verticalMovementPacket } = require("./packets/verticalMovePacket")
+import movePacketEvent from "./packets/movePacket.js"
+import verticalMovementPacket from "./packets/verticalMovePacket.js"
+import WebSocket, { WebSocketServer } from "ws"
+import "fs"
 
-const wss = new WebSocket.Server({
-    port: 8080
+const ws = new WebSocket()
+
+const wss = new WebSocketServer({
+    href: "localhost",
+    port: "8080"
 })
+
 let Players = []
 
 let i = 0
@@ -28,9 +32,9 @@ wss.on("connection", ws => {
     spawnPlayers()
     ws.on("message", async (data) => {
         if (data.toString().startsWith("movePlayerPkg: ")) {
-            movePacketEvent()
+            movePacketEvent(data, Players, wss)
         } else if (data.toString().startsWith("verticalMovementPkg: ")) {
-            verticalMovementPacket()
+            verticalMovementPacket(data, Players, wss)
         }
     })
     ws.on("close", () => {
